@@ -22,6 +22,7 @@ def menu():
 
         user_input = input("\nChoose an option:")
 
+
 def add_movie():
     name = input('Enter name:')
     director = input('Enter director:')
@@ -33,14 +34,17 @@ def add_movie():
         'year': year
     })
 
+
 def show_movies(movies_list):
     for movie in movies_list:
         show_movie_details(movie)
+
 
 def show_movie_details(movie):
     print(f"Name: {movie['name']}")
     print(f"Director: {movie['director']}")
     print(f"Year: {movie['year']}")
+
 
 def find_movies():
     property = input('What property?')
@@ -50,6 +54,7 @@ def find_movies():
 
     show_movies(found_movies)
 
+
 def find_by_attrib(expected, finder):
     found = []
 
@@ -58,7 +63,6 @@ def find_by_attrib(expected, finder):
             found.append(movie)
 
     return found
-
 
 
 menu()
