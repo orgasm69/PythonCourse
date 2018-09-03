@@ -26,6 +26,36 @@ def list_books():
         print('No books yet!')
 
 
+def mark_as_read():
+    list_books()
+    print('\n')
+    book_inner = input('Select a book to mark as read: ')
+    book_inner = _book_index_verifier(book_inner)
+    if book_inner:
+        books = _get_books_from_database()
+        for row in books:
+            if row[0] == int(book_inner):
+                if row[3] == 1:
+                    print('Book already marked.')
+                else:
+                    _update_book_item('read', row[0], 1)
+                    print('Book marked as read.')
+
+
+def delete_book():
+    list_books()
+    print('\n')
+    book_inner = input('Mark a book to delete: ')
+    book_inner = _book_index_verifier(book_inner)
+    if book_inner:
+        books = _get_books_from_database()
+        for row in books:
+            if row[0] == int(book_inner):
+                _delete_book_item(row[0])
+                print('Book deleted.')
+    _reload_indexes()
+
+
 def _set_book_index():
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
@@ -36,9 +66,6 @@ def _set_book_index():
     connection.commit()
     connection.close()
     return result[0][0]
-
-
-
 
 
 def _update_book_item(column, item, value):
@@ -71,36 +98,6 @@ def _get_books_from_database():
     connection.commit()
     connection.close()
     return result
-
-
-def mark_as_read():
-    list_books()
-    print('\n')
-    book_inner = input('Select a book to mark as read: ')
-    book_inner = _book_index_verifier(book_inner)
-    if book_inner:
-        books = _get_books_from_database()
-        for row in books:
-            if row[0] == int(book_inner):
-                if row[3] == 1:
-                    print('Book already marked.')
-                else:
-                    _update_book_item('read', row[0], 1)
-                    print('Book marked as read.')
-
-
-def delete_book():
-    list_books()
-    print('\n')
-    book_inner = input('Mark a book to delete: ')
-    book_inner = _book_index_verifier(book_inner)
-    if book_inner:
-        books = _get_books_from_database()
-        for row in books:
-            if row[0] == int(book_inner):
-                _delete_book_item(row[0])
-                print('Book deleted.')
-    _reload_indexes()
 
 
 def _book_index_verifier(index_input):
