@@ -10,10 +10,8 @@ USER_CHOICE = """
 
 
 def menu():
-    try:
-        database.create_book_table()
-    except database.sqlite3.OperationalError:
-        pass
+
+    database.create_book_table()
 
     while True:
         user_input = input(f'{USER_CHOICE} \nWhat is your choice?')

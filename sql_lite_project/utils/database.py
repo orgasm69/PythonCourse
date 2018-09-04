@@ -1,18 +1,15 @@
-import sqlite3
+from .database_connection import DatabaseConnection
 
 
 def add_book():
     book_index = _set_book_index() + 1
     book = input('Enter a book name: ')
     author = input('Enter a book author: ')
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    with DatabaseConnection('data.db') as connection:
+        cursor = connection.cursor()
 
-    cursor.execute('INSERT INTO books VALUES(?, ?, ?, 0)',
-                   (book_index, book, author))
-
-    connection.commit()
-    connection.close()
+        cursor.execute('INSERT INTO books VALUES(?, ?, ?, 0)',
+                       (book_index, book, author))
 
 
 def list_books():
@@ -57,46 +54,36 @@ def delete_book():
 
 
 def _set_book_index():
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    with DatabaseConnection('data.db') as connection:
+        cursor = connection.cursor()
 
-    cursor.execute('SELECT count(*) FROM books')
-    result = cursor.fetchall()
+        cursor.execute('SELECT count(*) FROM books')
+        result = cursor.fetchall()
 
-    connection.commit()
-    connection.close()
     return result[0][0]
 
 
 def _update_book_item(column, item, value):
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    with DatabaseConnection('data.db') as connection:
+        cursor = connection.cursor()
 
-    cursor.execute(f'UPDATE books SET {column} = {value} where id = {item}')
-
-    connection.commit()
-    connection.close()
+        cursor.execute(
+            f'UPDATE books SET {column} = {value} where id = {item}')
 
 
 def _delete_book_item(value):
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    with DatabaseConnection('data.db') as connection:
+        cursor = connection.cursor()
 
-    cursor.execute(f'DELETE from books where id = {value}')
-
-    connection.commit()
-    connection.close()
+        cursor.execute(f'DELETE from books where id = {value}')
 
 
 def _get_books_from_database():
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    with DatabaseConnection('data.db') as connection:
+        cursor = connection.cursor()
 
-    cursor.execute('SELECT * FROM books')
-    result = cursor.fetchall()
-
-    connection.commit()
-    connection.close()
+        cursor.execute('SELECT * FROM books')
+        result = cursor.fetchall()
     return result
 
 
@@ -122,11 +109,8 @@ def _reload_indexes():
 
 
 def create_book_table():
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    with DatabaseConnection('data.db') as connection:
+        cursor = connection.cursor()
 
-    cursor.execute(
-        'CREATE TABLE books(id integer primary key, name text, author text, read integer)')
-
-    connection.commit()
-    connection.close()
+        cursor.execute(
+            'CREATE TABLE IF NOT EXISTS books(id integer primary key, name text, author text, read integer)')
